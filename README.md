@@ -88,7 +88,7 @@ Styling is provided by pre loaded tailwindcss stylesheet.<br>
 
 A GET request to route '/register' would yield up the following form.
 	
-![alt text](https://github.com/RebarFdn/eaziForm/imgs/ezForm-basic-input.png?raw=true
+![alt text](https://github.com/RebarFdn/eaziForm/blob/main/imgs/ezForm-basic-input.png?raw=true
 )
 
 eaziForm&reg; automatically validates input data by a POST request using default or provided Htmx enpoints and target attributes.
