@@ -61,7 +61,7 @@ Styling is provided by pre loaded tailwindcss stylesheet.<br>
 		'''  '''
 		if request.method == 'POST':
 		    form = await request.form() 
-		    model = await UserModel().validateForm(request_data=form, schema=MyForm, post='/register')
+		    model = await UserModel().validateForm(request_data=form, schema=UserModel, post='/register')
 		    return HTMLResponse(model)
 		    
 		    
