@@ -1,9 +1,7 @@
 from pathlib import Path
-from typing import TypeVar
 from secrets import token_urlsafe
 from pydantic import BaseModel, Field, ConfigDict, ValidationError 
 from typing import Generic, TypeVar, Optional, Dict, Any
-import json
 
 # Config
 T = TypeVar('T', bound=BaseModel)
@@ -96,7 +94,7 @@ class FormModel(BaseModel):
                         # Checkbox Fields...
                     elif value.get('type') == 'boolean':
                         
-                        if value.get('default') == False:
+                        if not value.get('default'):
                             yield f"""<input type="checkbox" name="{key}" id="{key}"  class="checkbox checkbox-primary checkbox-sm" />"""
                         else:
                             yield f"""<input type="checkbox" name="{key}" id="{key}"  checked="checked" class="checkbox checkbox-primary checkbox-sm" />"""
@@ -110,8 +108,7 @@ class FormModel(BaseModel):
                                 <option disabled selected>Pick a {value.get('title')}</option>"""
                         for option in value.get('options'):
                             yield f"""<option>{option}</option>"""                               
-                        yield f""" </select>                           
-                            </fieldset>"""
+                        yield " </select></fieldset>"
                     # Range Fields...
                     elif value.get('range'):
                         yield f"""<output class="range-output" for="{key}"></output>
@@ -140,7 +137,7 @@ class FormModel(BaseModel):
                             yield """</label></fieldset>"""
             # process the nested fields
             if self.model_json_schema().get('$defs'):
-                yield f"""<div class="join join-vertical bg-base-100">"""
+                yield """<div class="join join-vertical bg-base-100">"""
                
                 for key2, value2 in self.model_json_schema().get('$defs').items():
                     yield f"""<div class="collapse collapse-arrow join-item border-base-300 border">
@@ -165,7 +162,7 @@ class FormModel(BaseModel):
                         
                         elif value3.get('type') == 'boolean':
                         
-                            if value3.get('default') == False:
+                            if not value3.get('default'):
                                 yield f"""<input type="checkbox" name="{key3}" id="{key3}"  class="checkbox checkbox-primary checkbox-sm" />"""
                             else:
                                 yield f"""<input type="checkbox" name="{key3}" id="{key3}"  checked="checked" class="checkbox checkbox-primary checkbox-sm" />"""
@@ -177,9 +174,7 @@ class FormModel(BaseModel):
                                     <option disabled selected>Pick a {value3.get('title')}</option>"""
                             for option in value3.get('options'):
                                 yield f"""<option>{option}</option>"""                               
-                            yield f""" </select>
-                             
-                                </fieldset>"""
+                            yield "</select></fieldset>"
 
                         # do further checks for file upload field, radio buttons,select fields etc...
                         else:  
@@ -196,7 +191,7 @@ class FormModel(BaseModel):
                     yield """</div>"""
                 yield """</div>"""                 
                     
-            yield f"""<div class="field flex flex-row is-grouped mt-5">
+            yield """<div class="field flex flex-row is-grouped mt-5">
                         <div class="control">
                             <input type="submit" class="btn btn-primary rounded-md btn-sm" value="Submit"></input>
                         </div>
@@ -231,8 +226,8 @@ class FormModel(BaseModel):
         
     
     @property        
-    def formfields(self)->set:  
-        fields:set = set() 
+    def formfields(self)->set: 
+        
         # checking for nested fields
         def_props:list = []
         if '$defs' in self.json_schema.keys():
@@ -284,11 +279,11 @@ class FormModel(BaseModel):
         Returns:        
             _type_:Returns the  FormData with error field or an Html of the result if Json_data is set to False
         """
-        from json import loads, dumps
+        from json import loads
         data = request_data
         modeled_data = schema().model_data 
         for key, value in modeled_data.items():
-            if type(value) == dict:
+            if type(value) is dict:
                 for key2 in value.keys():
                     if key2 in data:
                         value[key2] = data.get(key2)
