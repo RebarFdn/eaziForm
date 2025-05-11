@@ -66,7 +66,8 @@ class FormModel(BaseModel):
                     <style>{scss}</style>
                      
                 </head>
-                <body> <p class="text-xs"><i class="fa fa-asterisk"></i></p>"""
+                <body> """
+            yield """<p class="text-xs"><i class="fa fa-asterisk"></i></p><div id="eaziform"> """
             if post and target:
                 yield f"""<div style="margin:50px;"><form method="POST" hx-post="{post}" hx-target="#{target}">"""
             else:
@@ -129,9 +130,9 @@ class FormModel(BaseModel):
                     else:
                         # Text, Email, Password  Input Fields...
                         if values:
-                            yield f""" <input class="input is_primary" type="{value.get('type')}" name="{key}" id="{key}" placeholder="{value.get('title')}" value="{form.get('fields', {}).get(key, {}).get('value')}" />"""
+                            yield f""" <input class="input is_primary" type="{value.get('type')}" name="{key}" id="{key}" placeholder="{value.get('title')}" value="{form.get('fields', {}).get(key, {}).get('value')}" hx-post="{post}" hx-trigger="keyup changed delay:500ms" hx-target="#{target}" />"""
                         else:
-                            yield f""" <input class="input is_primary" type="{value.get('type')}" name="{key}" id="{key}" placeholder="{value.get('title')}"  />"""
+                            yield f""" <input class="input is_primary" type="{value.get('type')}" name="{key}" id="{key}" placeholder="{value.get('title')}" hx-post="{post}" hx-trigger="keyup changed delay:1000ms" hx-target="#{target}" />"""
                                          
                         if errors and form.get('fields', {}).get(key, {}).get('error'):
                             yield f"""</label> <div class="text-xs text-red-500 font-semibold">{form.get('fields', {}).get(key, {}).get('error')}</div></fieldset>"""
@@ -205,9 +206,12 @@ class FormModel(BaseModel):
                     </div>
                     </form>
                     </div>
-                    <p class="text-xs text-blue-500 font-fine mt-5"><strong>Forms By &reg PerForm</strong></p>"""
+                    
+                    <p class="text-xs text-blue-500 font-fine mt-5"><strong>Forms By EaziForm&reg </strong></p>
+                    """
             if not insert: 
-                yield """</body></html>"""
+                yield """<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+                        </div></body></html>"""
 
     
     @property        
@@ -271,7 +275,7 @@ class FormModel(BaseModel):
             return {'ERROR': e.json()}  
                  
    
-    async def validateForm(self, request_data:dict=None, schema:BaseModel=None, json_data:bool=False): 
+    async def validateForm(self, request_data:dict=None, schema:BaseModel=None, post:str=None, target:str='eaziform', insert:bool=False, json_data:bool=False): 
         """Validates the form data and returns a HTML form with errors if any.
         Args:   
             request_data (dict, optional): raw key values returned from the generated html model form. Defaults to None.
@@ -309,16 +313,15 @@ class FormModel(BaseModel):
             pd_form.csrf = data.get('csrf')
             pd_form.model = schema
             form = schema()            
-            form_html = form.html_form(post='/form', target="form", insert=True, form=pd_form.model_dump(), values=True, errors=True)
+            form_html = form.html_form(post=post, target=target, insert=insert, form=pd_form.model_dump(), values=True, errors=True)
             return form_html
             #return pd_form #pd_form #dict(data)
         
         if json_data:
-            data = result.model_dump()
-            data['is_valid'] = True
-            return loads(dumps(data))
+            return result.model_dump()            
+            
         else:
-            return {'is_valid': True, 'html': f"""<div class="card w-96 bg-base-100 card-xs shadow-sm">
+            return  f"""<div class="card w-96 bg-base-100 card-xs shadow-sm">
                                     <div class="card-body">
                                         <h2 class="card-title">Data Exchange</h2>
                                         <p>{result}</p>
@@ -328,10 +331,10 @@ class FormModel(BaseModel):
                                         <button class="btn btn-success btn-sm">Success</button>
                                         </div>
                                     </div>
-                        </div>"""}
+                        </div>"""
 
 
 if __name__ == '__main__':
-    print('PerForm  Auto generated  Forms ')
+    print('EaziForm  Auto generated  Forms ')
     
     
