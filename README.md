@@ -88,17 +88,17 @@ Styling is provided by pre loaded tailwindcss stylesheet.<br>
 
 A GET request to route '/register' would yield up the following form.
 	
-![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-input.png
+![alt text](file:./imgs/ezForm-basic-input.png
 )
 
 eaziForm&reg; automatically validates input data by a POST request using default or provided Htmx enpoints and target attributes.
 
-![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-validation.png)
+![alt text](file:./imgs/ezForm-basic-validation.png)
 
 
 Valid form sumission returns a JSON object or html insert.
 
-![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-result.png)
+![alt text](file:/imgs/ezForm-basic-result.png)
 
 
 # Advanced Usage
