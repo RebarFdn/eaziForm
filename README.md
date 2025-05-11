@@ -72,4 +72,33 @@ Styling is provided by pre loaded tailwindcss stylesheet.<br>
 
 
 
-	`
+# Features
+
+1.  Automatic Html form generation.
+
+ - Numeric Fields
+ - Text Fields
+ - Textarea Fields
+ - Checkbox Fields
+ - Select Fields
+ - Range Fields
+ 
+  
+2.  Field validation using pydantic validation mechanism
+
+A GET request to route '/register' would yield up the following form.
+	
+![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-input.png
+)
+
+eaziForm&reg; automatically validates input data by a POST request using default or provided Htmx enpoints and target attributes.
+
+![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-validation.png)
+
+
+Valid form sumission returns a JSON object or html insert.
+
+![alt text](file:///home/ian/eaziForm/imgs/ezForm-basic-result.png)
+
+
+# Advanced Usage
