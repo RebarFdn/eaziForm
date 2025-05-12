@@ -29,19 +29,19 @@ class Form(BaseModel, Generic[T]):
 class FormModel(BaseModel):     
     model_config = ConfigDict(json_schema_extra={'icon': 'location-arrow'}) 
     
-    def html_form(self,  post:str=None, target:str=None, insert:bool=False, form:Form=None, values:bool=False, errors:bool=False):
+    def html_form(self, header:str=None, post:str=None, target:str=None, insert:bool=False, form:Form=None, values:bool=False, errors:bool=False):
         """Returns a html form of the model 
 
         Args:
             insert (bool, optional): to insert css and icons resources or use local resources.
         """
         form_html:str =""
-        for i in  self.generate_html_form(post=post, target=target, insert=insert, form=form, values=values, errors=errors):
+        for i in  self.generate_html_form(header=header, post=post, target=target, insert=insert, form=form, values=values, errors=errors):
             form_html = form_html + i
         return  form_html
     
    # Forms Generator
-    def generate_html_form(self, post:str=None, target:str=None, insert:bool=False, form:Form=None, values:bool=False, errors:bool=False):
+    def generate_html_form(self, header:str=None, form:Form=None, post:str=None, target:str=None, insert:bool=False,  values:bool=False, errors:bool=False):
             """Generates a Html form of the instantiated model"""  
             with open(CSS) as file:
                 scss = file.read() 
@@ -65,7 +65,7 @@ class FormModel(BaseModel):
                      
                 </head>
                 <body> """
-            yield """<p class="text-xs"><i class="fa fa-asterisk"></i></p><div id="eaziform"> """
+            yield f"""<div class="text-lg my-5 mx-5">{header}</div><div id="eaziform"> """
             if post and target:
                 yield f"""<div style="margin:50px;"><form method="POST" hx-post="{post}" hx-target="#{target}">"""
             else:
@@ -270,7 +270,7 @@ class FormModel(BaseModel):
             return {'ERROR': e.json()}  
                  
    
-    async def validateForm(self, request_data:dict=None, schema:BaseModel=None, post:str=None, target:str='eaziform', insert:bool=False, json_data:bool=False): 
+    async def validateForm(self, header:str=None,request_data:dict=None, schema:BaseModel=None, post:str=None, target:str='eaziform', insert:bool=False, json_data:bool=False): 
         """Validates the form data and returns a HTML form with errors if any.
         Args:   
             request_data (dict, optional): raw key values returned from the generated html model form. Defaults to None.
@@ -308,7 +308,7 @@ class FormModel(BaseModel):
             pd_form.csrf = data.get('csrf')
             pd_form.model = schema
             form = schema()            
-            form_html = form.html_form(post=post, target=target, insert=insert, form=pd_form.model_dump(), values=True, errors=True)
+            form_html = form.html_form(header=header, post=post, target=target, insert=insert, form=pd_form.model_dump(), values=True, errors=True)
             return form_html
             #return pd_form #pd_form #dict(data)
         
